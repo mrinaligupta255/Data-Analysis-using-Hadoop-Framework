@@ -1,0 +1,63 @@
+
+---
+ - hosts: all
+   tasks:
+    - name: "setting up core config files"
+      copy:
+        src: "/webcontent/tempdata/core.xml"
+        dest: "/etc/hadoop/core-site.xml"
+
+
+
+ - hosts: name
+   tasks:
+    - name: "setting up config files"
+      copy:
+        src: "/webcontent/tempdata/hdfsname.xml"
+        dest: "/etc/hadoop/hdfs-site.xml"
+      
+    
+    - name: "making directory"
+      file:
+        state: directory
+        path: "{0}"
+
+    - name: "Starting name node service"
+      shell: "echo Y | hadoop namenode -format"
+
+    - name: "Starting name node service"
+      command: "hadoop-daemon.sh start namenode"
+
+
+ - hosts: data
+   tasks:
+    - name: "setting up config files"
+      copy:
+        src: "/webcontent/tempdata/hdfsdata.xml"
+        dest: "/etc/hadoop/hdfs-site.xml"
+      
+    - name: "making directory"
+      file:
+        state: directory
+        path: "{1}"
+    - name: "making lv"
+      lvol:
+        vg: myvg
+        lv: projectlv
+        size: {2}
+        active: yes
+
+    - filesystem:
+       fstype: ext4
+       dev: /dev/myvg/projectlv
+    
+    - name: mounting lv to data node
+      mount:
+       path: {3}
+       src: /dev/myvg/projectlv
+       fstype: ext4
+       state: mounted
+
+	   
+    - name: "Starting data node service"
+      command: "hadoop-daemon.sh start datanode"
