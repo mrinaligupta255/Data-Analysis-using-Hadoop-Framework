@@ -1,0 +1,25 @@
+---
+ - hosts: all
+   tasks:
+    - name: "setting up core config files"
+      copy:
+        src: "/webcontent/tempdata/mapred.xml"
+        dest: "/etc/hadoop/mapred-site.xml"
+
+
+ - hosts: job
+   tasks:
+    - name: "setting up core config files"
+      copy:
+        src: "/webcontent/tempdata/core.xml"
+        dest: "/etc/hadoop/core-site.xml"
+    - name: "Starting job tracker service"
+      command: "hadoop-daemon.sh start jobtracker"
+
+
+
+ - hosts: task
+   tasks:
+    - name: "starting task tracker service"
+      command: "hadoop-daemon.sh start tasktracker"
+ 
