@@ -1,0 +1,48 @@
+<form action='/scripts/first.py'>
+<input type='submit' />
+
+</form>
+
+
+
+count1=m_have_key[:len(m_have_key)-20]
+count2=m_have_key[len(m_have_key)-20:]
+hlang=[]
+wlang=[]
+for i in count2:
+ hlang.append(m_have[i])
+ wlang.append(m_want[i])
+
+
+
+
+
+N = 20
+ind = np.arange(N)  # the x locations for the groups
+width = 0.27       # the width of the bars
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+
+rects1 = ax.bar(ind, hlang, width, color='r')
+
+rects2 = ax.bar(ind+width, wlang, width, color='g')
+
+
+ax.set_ylabel('Numbers of StackOverflow Developers till 2017')
+ax.set_xlabel('Countries')
+ax.set_title("Languages Used by developers\n")
+ax.set_xticks(ind+width)
+ax.set_xticklabels( count2 )
+plt.setp(plt.xticks()[1], rotation=90)
+ax.legend( (rects1[0], rects2[0]), ('Have Worked Language', 'Want Work Language') ,loc='upper left')
+
+def autolabel(rects):
+    for rect in rects:
+        h = rect.get_height()
+        ax.text(rect.get_x()+rect.get_width()/0.5, 1.05*h, '%d'%int(h),
+                ha='center', va='bottom')
+
+autolabel(rects1)
+autolabel(rects2)
